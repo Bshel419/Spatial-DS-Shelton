@@ -227,6 +227,7 @@ class DrawGeoJson(object):
         self.screen = screen    # window handle for pygame drawing
 
         self.polygons = []      # list of lists (polygons) to be drawn
+        self.adjusted_polys = []
 
         self.all_lats = []      # list for all lats so we can find mins and max's
         self.all_lons = []
@@ -290,7 +291,9 @@ class DrawGeoJson(object):
             for p in poly:
                 x,y = p
                 adjusted.append(self.convertGeoToPixel(x,y))
+            self.adjusted_polys.append(adjusted)
             pygame.draw.polygon(self.screen, self.colors.get_random_color(), adjusted, 0)
+
 
     def __update_bounds(self):
         """
@@ -383,6 +386,7 @@ def point_inside_polygon(x,y,poly):
 
     return inside
 
+
 #####################################################################################
 #####################################################################################
 
@@ -440,6 +444,9 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                print(event.pos)
-                gd.draw_polygons()
-            pygame.display.flip()
+                (x,y) = event.pos
+                for coord in gd.adjusted_polys:
+                    isInside = point_inside_polygon(x,y,coord)
+                    if(isInside):
+                        print("WASSUP")
+        pygame.display.flip()        
