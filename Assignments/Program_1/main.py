@@ -441,4 +441,5 @@ if __name__ == '__main__':
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 print(event.pos)
+                gd.draw_polygons()
             pygame.display.flip()
