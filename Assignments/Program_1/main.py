@@ -3,6 +3,7 @@ import os,sys
 import pygame
 import random 
 import math
+import pprint as pp
 
 # Get current working path
 DIRPATH = os.path.dirname(os.path.realpath(__file__))
@@ -88,8 +89,10 @@ class StateBorders(object):
         Returns a polygon of a single state from the US.
         Args:
             name (string): Name of a single state. 
+
         Returns:
             json (string object): Json representation of a state
+
         Usage:
             sb = StateBorders()
             texas = sb.get_state_polygon('texas')
@@ -112,8 +115,10 @@ class StateBorders(object):
         Returns a list of all the continental us states as polygons.
         Args:
             None
+
         Returns:
             list (list object): list of Json objects representing each continental state.
+
         Usage:
             sb = StateBorders()
             states = sb.get_continental_states()
@@ -136,6 +141,7 @@ class StateBorders(object):
         Returns boolean if key exists in json
         Args:
             key (string) : some identifier 
+
         Returns:
             T/F (bool) : True = Key exists
         """
@@ -164,8 +170,10 @@ class WorldCountries(object):
         Returns a list of all the countries us states.
         Args:
             None
+
         Returns:
             list (list object): List of Json objects representing each country 
+
         Usage:
             wc = WorldCountries()
             countries = wc.get_all_countries()
@@ -183,8 +191,10 @@ class WorldCountries(object):
         Returns a list of one country.
         Args:
             None
+
         Returns:
             list (list object): List of Json object representing a country 
+
         Usage:
             wc = WorldCountries()
             country = wc.get_country('AFG')
@@ -201,6 +211,7 @@ class WorldCountries(object):
         Returns boolean if key exists in json
         Args:
             key (string) : some identifier 
+
         Returns:
             T/F (bool) : True = Key exists
         """
@@ -227,10 +238,15 @@ class DrawGeoJson(object):
         self.screen = screen    # window handle for pygame drawing
 
         self.polygons = []      # list of lists (polygons) to be drawn
-        self.adjusted_polys = []
+
 
         self.all_lats = []      # list for all lats so we can find mins and max's
         self.all_lons = []
+
+        # New added June 13
+        self.adjusted_polys = []
+        # New added June 13
+        self.adjusted_poly_dict = {}
 
         self.mapWidth = width       # width of the map in pixels
         self.mapHeight = height     # height of the map in pixels
@@ -248,6 +264,7 @@ class DrawGeoJson(object):
         Args:
             lon (float): longitude
             lat (float): latitude
+
         Returns:
             point (tuple): x,y coords adjusted to fit on print window
         """
@@ -261,20 +278,44 @@ class DrawGeoJson(object):
         return (x, y)
 
 
-    def add_polygon(self,poly):
+    def add_polygon(self,poly,id=None):
         """
         Add a polygon to local collection to be drawn later
         Args:
             poly (list): list of lat/lons
+
         Returns:
             None
         """
         self.polygons.append(poly)
+        # New added June 13
+        if id is not None:
+            # if country not in dict, make a list for its polygons
+            # to be appended to.
+            if id not in self.adjusted_poly_dict:
+                self.adjusted_poly_dict[id] = []
+            # append poly to dictionary with country as key (id).
+            self.adjusted_poly_dict[id].append(poly)   
         for p in poly:
             x,y = p
             self.all_lons.append(x)
             self.all_lats.append(y)
         self.__update_bounds()
+
+    # We should use recursion on these containers with arbitrary depth, but oh well.
+    def adjust_poly_dictionary(self):
+        #pp.pprint(self.adjusted_poly_dict)
+        for country,polys in self.adjusted_poly_dict.items():
+            new_polys = []
+            print(country)
+            for poly in polys:
+                new_poly = []
+                for p in poly:
+                    x,y = p
+                    new_poly.append(self.convertGeoToPixel(x,y))
+                new_polys.append(new_poly)
+            self.adjusted_poly_dict[country] = new_polys
+        pp.pprint(self.adjusted_poly_dict)
 
 
     def draw_polygons(self):
@@ -282,18 +323,19 @@ class DrawGeoJson(object):
         Draw our polygons to the screen
         Args:
             None
+
         Returns:
             None
         """ 
-        black = (0,0,0)
+
         for poly in self.polygons:
             adjusted = []
             for p in poly:
                 x,y = p
                 adjusted.append(self.convertGeoToPixel(x,y))
+            # New added June 13
             self.adjusted_polys.append(adjusted)
             pygame.draw.polygon(self.screen, self.colors.get_random_color(), adjusted, 0)
-
 
     def __update_bounds(self):
         """
@@ -302,6 +344,7 @@ class DrawGeoJson(object):
         the "bounding box" surrounding all the points. Not perfect.
         Args:
             None
+
         Returns:
             None
         """  
@@ -434,12 +477,13 @@ if __name__ == '__main__':
     # df.add_polygons(['TX','NY','ME','Kenya'])
     df.add_polygons(['TX','Spain','France','Belgium','Italy','Ireland','Scotland','Greece','Germany','Egypt','Morocco','India'])
 
-
+   
     # Main loop
     running = True
     gd.draw_polygons()
+    gd.adjust_poly_dictionary()
+    print(gd.adjusted_poly_dict)
     while running:
-        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -447,6 +491,6 @@ if __name__ == '__main__':
                 (x,y) = event.pos
                 for coord in gd.adjusted_polys:
                     isInside = point_inside_polygon(x,y,coord)
-                    if(isInside):
-                        print("WASSUP")
+       
+                    
         pygame.display.flip()        
