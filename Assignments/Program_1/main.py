@@ -89,10 +89,8 @@ class StateBorders(object):
         Returns a polygon of a single state from the US.
         Args:
             name (string): Name of a single state. 
-
         Returns:
             json (string object): Json representation of a state
-
         Usage:
             sb = StateBorders()
             texas = sb.get_state_polygon('texas')
@@ -115,10 +113,8 @@ class StateBorders(object):
         Returns a list of all the continental us states as polygons.
         Args:
             None
-
         Returns:
             list (list object): list of Json objects representing each continental state.
-
         Usage:
             sb = StateBorders()
             states = sb.get_continental_states()
@@ -141,7 +137,6 @@ class StateBorders(object):
         Returns boolean if key exists in json
         Args:
             key (string) : some identifier 
-
         Returns:
             T/F (bool) : True = Key exists
         """
@@ -170,10 +165,8 @@ class WorldCountries(object):
         Returns a list of all the countries us states.
         Args:
             None
-
         Returns:
             list (list object): List of Json objects representing each country 
-
         Usage:
             wc = WorldCountries()
             countries = wc.get_all_countries()
@@ -191,10 +184,8 @@ class WorldCountries(object):
         Returns a list of one country.
         Args:
             None
-
         Returns:
             list (list object): List of Json object representing a country 
-
         Usage:
             wc = WorldCountries()
             country = wc.get_country('AFG')
@@ -211,7 +202,6 @@ class WorldCountries(object):
         Returns boolean if key exists in json
         Args:
             key (string) : some identifier 
-
         Returns:
             T/F (bool) : True = Key exists
         """
@@ -264,7 +254,6 @@ class DrawGeoJson(object):
         Args:
             lon (float): longitude
             lat (float): latitude
-
         Returns:
             point (tuple): x,y coords adjusted to fit on print window
         """
@@ -283,7 +272,6 @@ class DrawGeoJson(object):
         Add a polygon to local collection to be drawn later
         Args:
             poly (list): list of lat/lons
-
         Returns:
             None
         """
@@ -307,7 +295,7 @@ class DrawGeoJson(object):
         #pp.pprint(self.adjusted_poly_dict)
         for country,polys in self.adjusted_poly_dict.items():
             new_polys = []
-            print(country)
+            #print(country)
             for poly in polys:
                 new_poly = []
                 for p in poly:
@@ -315,7 +303,7 @@ class DrawGeoJson(object):
                     new_poly.append(self.convertGeoToPixel(x,y))
                 new_polys.append(new_poly)
             self.adjusted_poly_dict[country] = new_polys
-        pp.pprint(self.adjusted_poly_dict)
+        #pp.pprint(self.adjusted_poly_dict)
 
 
     def draw_polygons(self):
@@ -323,7 +311,6 @@ class DrawGeoJson(object):
         Draw our polygons to the screen
         Args:
             None
-
         Returns:
             None
         """ 
@@ -344,7 +331,6 @@ class DrawGeoJson(object):
         the "bounding box" surrounding all the points. Not perfect.
         Args:
             None
-
         Returns:
             None
         """  
@@ -373,7 +359,6 @@ class DrawingFacade(object):
         self.wc = WorldCountries(DIRPATH + '/../Json_Files/countries.geo.json')
         self.gd = DrawGeoJson(screen,width,height)
 
-
     def add_polygons(self,ids):
         """
         Adds polygons to the 'DrawGeoJson' class using country names or id's, state names or code's. It
@@ -387,22 +372,22 @@ class DrawingFacade(object):
         """ 
         for id in ids:
             if self.wc.key_exists(id):
-                self.__add_country(self.wc.get_country(id))
+                self.__add_country(self.wc.get_country(id),id)
             elif self.sb.key_exists(id):
-                self.__add_state(self.sb.get_state(id))         
+                self.__add_state(self.sb.get_state(id),id)         
 
-    def __add_country(self,country):
+    def __add_country(self,country,id=None):
         for polys in country:
             for poly in polys:
                 if type(poly[0][0]) is float:
-                    gd.add_polygon(poly)
+                    gd.add_polygon(poly,id)
                 else:
                     for sub_poly in poly:
-                        self.gd.add_polygon(sub_poly)
+                        self.gd.add_polygon(sub_poly,id)
 
-    def __add_state(self,state):
+    def __add_state(self,state,id=None):
         for poly in state:
-            self.gd.add_polygon(poly)
+            self.gd.add_polygon(poly,id)
 
 
 
@@ -429,7 +414,6 @@ def point_inside_polygon(x,y,poly):
 
     return inside
 
-
 #####################################################################################
 #####################################################################################
 
@@ -442,6 +426,8 @@ def mercator_projection(latlng,zoom=0,tile_size=256):
     y = ((1 - math.log(math.tan(latlng[1] * math.pi / 180) + 1 / math.cos(latlng[1] * math.pi / 180)) / math.pi) / 2 * pow(2, 0)) * tile_size
    
     return (x,y)
+
+        
 
 if __name__ == '__main__':
 
@@ -459,6 +445,12 @@ if __name__ == '__main__':
     # pass it to functions and draw to it.
     screen = pygame.display.set_mode((width, height)) 
 
+    #stores already clicked countries
+    alreadyClicked = []
+
+    #starts up pygame's fonts for printing the country's name
+    pygame.font.init() 
+
     # Set title of window
     pygame.display.set_caption('Draw World Polygons')
 
@@ -470,27 +462,75 @@ if __name__ == '__main__':
 
     # Instances of our drawing classes
     gd = DrawGeoJson(screen,width,height)
-    df = DrawingFacade(width,height)  
+    df = DrawingFacade(width,height)
+
+    #print(gd.__dict__)    
 
     # Add countries and states to our drawing facade.
     # df.add_polygons(['FRA','TX','ESP','AFG','NY'])
     # df.add_polygons(['TX','NY','ME','Kenya'])
     df.add_polygons(['TX','Spain','France','Belgium','Italy','Ireland','Scotland','Greece','Germany','Egypt','Morocco','India'])
 
-   
+
+    # Call draw polygons to "adjust" the regular polygons
+    gd.draw_polygons()
+    # Call my new method to "adjust" the dictionary of polygons
+    gd.adjust_poly_dictionary()
+
     # Main loop
     running = True
+    
+    clickedCountry = ''
     gd.draw_polygons()
-    gd.adjust_poly_dictionary()
-    print(gd.adjusted_poly_dict)
     while running:
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
+
                 (x,y) = event.pos
-                for coord in gd.adjusted_polys:
-                    isInside = point_inside_polygon(x,y,coord)
-       
+
+                rectParams = []
+
+                #loop through the dictionary to get the name of the country the user clicked on
+                for country in gd.adjusted_poly_dict:
+                    for poly in gd.adjusted_poly_dict[country]:
+                        if(point_inside_polygon(x, y, poly)):
+                            clickedCountry = country
+                            rectParams.append(min(poly))
+                            rectParams.append(max(poly))
                     
-        pygame.display.flip()        
+                            #refresh clicked
+                            clicked = False
+
+                            #if the country has already been clicked on don't display the name everytime you click
+                            for country in alreadyClicked:
+                                if(country == clickedCountry):
+                                    clicked = True
+                print(rectParams)
+                #as long as we have a country name and it hasn't been clicked
+                if(clickedCountry != '' and clicked == False):
+                    #add said clicked country to the clicked list
+                    alreadyClicked.append(clickedCountry)
+
+                    #draw a border around the clicked country
+                    for coord in gd.adjusted_poly_dict[clickedCountry]:
+                        pygame.draw.lines(gd.screen, gd.colors.get_rgb("black"), False, coord)
+
+                    pygame.draw.rect(gd.screen, gd.colors.get_rgb("red"), rectParams, 1)
+                    #create instance of font class 
+                    myfont = pygame.font.SysFont("monospace", 15)
+
+                    # render black text
+                    label = myfont.render(clickedCountry, 1, (0,0,0))
+                    screen.blit(label, event.pos)
+
+                    #refresh screen to display changes
+                    pygame.display.flip()
+
+                #refresh clicked Country 
+                clickedCountry = ''
+                
+        #refresh the screen one last time        
+        pygame.display.flip()
