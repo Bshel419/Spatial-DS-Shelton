@@ -492,15 +492,18 @@ if __name__ == '__main__':
                 (x,y) = event.pos
 
                 rectParams = []
+                countryX = []
+                countryY = []
 
                 #loop through the dictionary to get the name of the country the user clicked on
                 for country in gd.adjusted_poly_dict:
                     for poly in gd.adjusted_poly_dict[country]:
                         if(point_inside_polygon(x, y, poly)):
                             clickedCountry = country
-                            rectParams.append(min(poly))
-                            rectParams.append(max(poly))
-                    
+                            for polyX, polyY in poly:
+                                countryX.append(polyX)
+                                countryY.append(polyY)
+
                             #refresh clicked
                             clicked = False
 
@@ -508,7 +511,7 @@ if __name__ == '__main__':
                             for country in alreadyClicked:
                                 if(country == clickedCountry):
                                     clicked = True
-                print(rectParams)
+                                    
                 #as long as we have a country name and it hasn't been clicked
                 if(clickedCountry != '' and clicked == False):
                     #add said clicked country to the clicked list
@@ -517,6 +520,12 @@ if __name__ == '__main__':
                     #draw a border around the clicked country
                     for coord in gd.adjusted_poly_dict[clickedCountry]:
                         pygame.draw.lines(gd.screen, gd.colors.get_rgb("black"), False, coord)
+                    
+                    #calculating rectangle parameters
+                    rectParams.append(min(countryX))
+                    rectParams.append(min(countryY))
+                    rectParams.append(max(countryX) - min(countryX))
+                    rectParams.append(max(countryY) - min(countryY))
 
                     pygame.draw.rect(gd.screen, gd.colors.get_rgb("red"), rectParams, 1)
                     #create instance of font class 
@@ -529,8 +538,10 @@ if __name__ == '__main__':
                     #refresh screen to display changes
                     pygame.display.flip()
 
-                #refresh clicked Country 
+                #refresh clicked Country and countryX and Y 
                 clickedCountry = ''
+                countryX = []
+                countryY = []
                 
         #refresh the screen one last time        
         pygame.display.flip()
