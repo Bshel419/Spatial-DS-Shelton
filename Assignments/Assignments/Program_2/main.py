@@ -3,6 +3,7 @@ import random
 from dbscan import *
 import sys,os
 import pprint as pp
+from read_crime_data import *
 
 
 def calculate_mbrs(points, epsilon, min_pts):
@@ -59,7 +60,7 @@ def clean_area(screen,origin,width,height,color):
 
 background_colour = (255,255,255)
 black = (0,0,0)
-(width, height) = (600, 400)
+(width, height) = (2000, 2000)
 
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('Simple Line')
@@ -73,12 +74,7 @@ min_pts = 5.0
 points = []
 adjustedPoints = []
 
-num_points = 500
-
-
-for i in range(num_points):
-    x = random.randint(10,width-10)
-    y = random.randint(10,height-10)
+for x,y in crimePoints:
     points.append((x,y))
 
 xMin = min(points, key = lambda t: t[0])
@@ -86,25 +82,30 @@ xMax = max(points, key = lambda t: t[0])
 yMin = min(points, key = lambda t: t[1])
 yMax = max(points, key = lambda t: t[1])
 
+print(xMin, xMax, yMin, yMax)
+
 for x,y in points:
-    newX = (x - xMin[0])/(xMax[0] - xMin[0])
-    newY = (y - yMin[1])/(yMax[1] - yMin[1])
-    adjustedPoints.append((newX,newY))
+    intX = int(x)
+    intY = int(y)
+    newX = (intX - xMin)/(xMax - xMin)
+    newY = (intY - yMin)/(yMax - yMin)
+    adjustedPoints.append((newX, newY))
+
     
-mbrs = calculate_mbrs(adjustedPoints, epsilon, min_pts)
+#mbrs = calculate_mbrs(adjustedPoints, epsilon, min_pts)
 
 running = True
 while running:
 
-    for p in points:
+    for p in adjustedPoints:
         pygame.draw.circle(screen, black, p, 3, 0)
-    for mbr in mbrs:
-        pygame.draw.polygon(screen, black, mbr, 2)
+    #for mbr in mbrs:
+        #pygame.draw.polygon(screen, black, mbr, 2)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            clean_area(screen,(0,0),width,height,(255,255,255))
-            adjustedPoints.append(event.pos)
-            mbrs = calculate_mbrs(adjustedPoints, epsilon, min_pts)
+        #if event.type == pygame.MOUSEBUTTONDOWN:
+            #clean_area(screen,(0,0),width,height,(255,255,255))
+            #adjustedPoints.append(event.pos)
+           # mbrs = calculate_mbrs(adjustedPoints, epsilon, min_pts)
     pygame.display.flip()
