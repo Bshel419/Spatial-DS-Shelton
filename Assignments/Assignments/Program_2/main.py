@@ -62,7 +62,12 @@ def clean_area(screen,origin,width,height,color):
 DIRPATH = os.path.dirname(os.path.realpath(__file__))
 background_colour = (255,255,255)
 black = (0,0,0)
-(width, height) = (2000,2000)
+firebrick = (194,35,38)
+tomato = (255,99,71)
+goldenrod = (253,182,50)
+teal = (2,120,120)
+brown = (51,25,0)
+(width, height) = (1000,1000)
 
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('Simple Line')
@@ -125,45 +130,45 @@ deltay = float(maxy) - float(miny)
 
 for x,y in bronx_points:
     x = float(x)
-    y = 1 - float(y)
+    y = float(y)
     newX = (x - minx)/deltax
-    newY = (y - miny)/deltay
+    newY = (1 - (y - miny)/deltay)
     newX = int(newX * 1000)
     newY = int(newY * 1000)
     bronx_adjustedPoints.append((newX ,newY))
 
 for x,y in brooklyn_points:
     x = float(x)
-    y = 1 - float(y)
+    y = float(y)
     newX = (x - minx)/deltax
-    newY = (y - miny)/deltay
+    newY = (1 - (y - miny)/deltay)
     newX = int(newX * 1000)
     newY = int(newY * 1000)
     brooklyn_adjustedPoints.append((newX ,newY))
 
 for x,y in manhattan_points:
     x = float(x)
-    y = 1 - float(y)
+    y = float(y)
     newX = (x - minx)/deltax
-    newY = (y - miny)/deltay
+    newY = (1 - (y - miny)/deltay)
     newX = int(newX * 1000)
     newY = int(newY * 1000)
     manhattan_adjustedPoints.append((newX ,newY))
 
 for x,y in queens_points:
     x = float(x)
-    y = 1 - float(y)
+    y = float(y)
     newX = (x - minx)/deltax
-    newY = (y - miny)/deltay
+    newY = (1 - (y - miny)/deltay)
     newX = int(newX * 1000)
     newY = int(newY * 1000)
     queens_adjustedPoints.append((newX ,newY))
 
 for x,y in staten_island_points:
     x = float(x)
-    y = 1 - float(y)
+    y = float(y)
     newX = (x - minx)/deltax
-    newY = (y - miny)/deltay
+    newY = (1 - (y - miny)/deltay)
     newX = int(newX * 1000)
     newY = int(newY * 1000)
     staten_island_adjustedPoints.append((newX ,newY))
@@ -173,15 +178,15 @@ running = True
 while running:
 
     for p in bronx_adjustedPoints:
-        pygame.draw.circle(screen, black, p, 3, 0)
+        pygame.draw.circle(screen, teal, p, 3, 0)
     for p in brooklyn_adjustedPoints:
-        pygame.draw.circle(screen, black, p, 3, 0)
+        pygame.draw.circle(screen, brown, p, 3, 0)
     for p in manhattan_adjustedPoints:
-        pygame.draw.circle(screen, black, p, 3, 0)
+        pygame.draw.circle(screen, firebrick, p, 3, 0)
     for p in queens_adjustedPoints:
-        pygame.draw.circle(screen, black, p, 3, 0)
+        pygame.draw.circle(screen, tomato, p, 3, 0)
     for p in staten_island_adjustedPoints:
-        pygame.draw.circle(screen, black, p, 3, 0)
+        pygame.draw.circle(screen, goldenrod, p, 3, 0)
     #for mbr in mbrs:
         #pygame.draw.polygon(screen, black, mbr, 2)
     for event in pygame.event.get():
