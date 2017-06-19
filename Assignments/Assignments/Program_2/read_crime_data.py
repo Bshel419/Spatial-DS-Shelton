@@ -5,12 +5,33 @@ import os,sys
 DIRPATH = os.path.dirname(os.path.realpath(__file__))
 
 keys = []
-crimes = []
-crimePoints = []
+bronx_crimes = []
+brooklyn_crimes = []
+manhattan_crimes = []
+manhattan_crimes = []
+queens_crimes = []
+staten_island_crimes = []
+
+bronx_crimePoints = []
+brooklyn_crimePoints = []
+manhattan_crimePoints = []
+queens_crimePoints = []
+staten_island_crimePoints = []
 
 got_keys = False
 #with open(DIRPATH+'/../NYPD_CrimeData/Nypd_Crime_01') as f:
-with open(DIRPATH+'/'+'Nypd_Crime_01.txt') as f:
+with open(DIRPATH+'/'+'filtered_crimes_bronx.txt') as f:
+    for line in f:
+        line = ''.join(x if i % 2 == 0 else x.replace(',', ':') for i, x in enumerate(line.split('"')))
+        line = line.strip().split(',')
+        if not got_keys:
+            keys = line
+            print(keys)
+            got_keys = True
+            continue
+        bronx_crimes.append(line)
+
+with open(DIRPATH+'/'+'filtered_crimes_brooklyn.txt') as f:
     for line in f:
         line = ''.join(x if i % 2 == 0 else x.replace(',', ':') for i, x in enumerate(line.split('"')))
         line = line.strip().split(',')
@@ -20,21 +41,117 @@ with open(DIRPATH+'/'+'Nypd_Crime_01.txt') as f:
             got_keys = True
             continue
 
-        #d = {}
-        # for i in range(len(line)-1):
-        #     d[keys[i]] = line[i]
-        crimes.append(line)
-#for crime in crimes:
-    #print(crime[19],crime[20])
+        brooklyn_crimes.append(line)
 
-for crime in crimes:
-    if crime[21] == '':
-        continue
-    else:
-        x = crime[21]
-    if crime[22] == '':
-        continue
-    else:
-        y = crime[22]
+with open(DIRPATH+'/'+'filtered_crimes_manhattan.txt') as f:
+    for line in f:
+        line = ''.join(x if i % 2 == 0 else x.replace(',', ':') for i, x in enumerate(line.split('"')))
+        line = line.strip().split(',')
+        if not got_keys:
+            keys = line
+            print(keys)
+            got_keys = True
+            continue
 
-    crimePoints.append((x,y))
+        manhattan_crimes.append(line)
+    
+with open(DIRPATH+'/'+'filtered_crimes_queens.txt') as f:
+    for line in f:
+        line = ''.join(x if i % 2 == 0 else x.replace(',', ':') for i, x in enumerate(line.split('"')))
+        line = line.strip().split(',')
+        if not got_keys:
+            keys = line
+            print(keys)
+            got_keys = True
+            continue
+            
+        queens_crimes.append(line)
+
+with open(DIRPATH+'/'+'filtered_crimes_staten_island.txt') as f:
+    for line in f:
+        line = ''.join(x if i % 2 == 0 else x.replace(',', ':') for i, x in enumerate(line.split('"')))
+        line = line.strip().split(',')
+        if not got_keys:
+            keys = line
+            print(keys)
+            got_keys = True
+            continue
+            
+        staten_island_crimes.append(line)
+
+
+for crime in bronx_crimes:
+    if(len(crime) == 24):
+        if crime[19] == '':
+            continue
+        else:
+            x = int(crime[19])
+            newX = x
+        if crime[20] == '':
+            continue
+        else:
+            y = int(crime[20])
+            newY = y
+
+        bronx_crimePoints.append((newX,newY))
+
+for crime in brooklyn_crimes:
+    if(len(crime) == 24):
+        if crime[19] == '':
+            continue
+        else:
+            x = int(crime[19])
+            newX = x
+        if crime[20] == '':
+            continue
+        else:
+            y = int(crime[20])
+            newY = y
+
+        brooklyn_crimePoints.append((newX,newY))
+
+for crime in manhattan_crimes:
+    if(len(crime) == 24):
+        if crime[19] == '':
+            continue
+        else:
+            x = int(crime[19])
+            newX = x
+        if crime[20] == '':
+            continue
+        else:
+            y = int(crime[20])
+            newY = y
+
+        manhattan_crimePoints.append((newX,newY))
+
+for crime in queens_crimes:
+    if(len(crime) == 24):
+        if crime[19] == '':
+            continue
+        else:
+            x = int(crime[19])
+            newX = x
+        if crime[20] == '':
+            continue
+        else:
+            y = int(crime[20])
+            newY = y
+
+        queens_crimePoints.append((newX,newY))
+
+for crime in staten_island_crimes:
+    if(len(crime) == 24):
+        if crime[19] == '':
+            continue
+        else:
+            x = int(crime[19])
+            newX = x
+        if crime[20] == '':
+            continue
+        else:
+            y = int(crime[20])
+            newY = y
+
+        staten_island_crimePoints.append((newX,newY))
+    

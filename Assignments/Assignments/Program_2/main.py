@@ -58,9 +58,11 @@ def clean_area(screen,origin,width,height,color):
     points = [(ox,oy),(ox+width,oy),(ox+width,oy+height),(ox,oy+height),(ox,oy)]
     pygame.draw.polygon(screen, color, points, 0)
 
+
+DIRPATH = os.path.dirname(os.path.realpath(__file__))
 background_colour = (255,255,255)
 black = (0,0,0)
-(width, height) = (2000, 2000)
+(width, height) = (2000,2000)
 
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('Simple Line')
@@ -71,37 +73,119 @@ pygame.display.flip()
 epsilon = 20
 min_pts = 5.0
 
-points = []
-adjustedPoints = []
+bronx_points = []
+brooklyn_points = []
+manhattan_points = []
+queens_points = []
+staten_island_points = []
 
-for x,y in crimePoints:
-    points.append((x,y))
+bronx_adjustedPoints = []
+brooklyn_adjustedPoints = []
+manhattan_adjustedPoints = []
+queens_adjustedPoints = []
+staten_island_adjustedPoints = []
 
-xMin = min(points, key = lambda t: t[0])
-xMax = max(points, key = lambda t: t[0])
-yMin = min(points, key = lambda t: t[1])
-yMax = max(points, key = lambda t: t[1])
+for x,y in bronx_crimePoints:
+    bronx_points.append((x,y))
 
-print(xMin, xMax, yMin, yMax)
+for x,y in brooklyn_crimePoints:
+    brooklyn_points.append((x,y))
 
-for x,y in points:
-    intX = int(x)
-    intY = int(y)
-    newX = (intX - xMin)/(xMax - xMin)
-    newY = (intY - yMin)/(yMax - yMin)
-    adjustedPoints.append((newX, newY))
+for x,y in manhattan_crimePoints:
+    manhattan_points.append((x,y))
 
-    
-#mbrs = calculate_mbrs(adjustedPoints, epsilon, min_pts)
+for x,y in queens_crimePoints:
+    queens_points.append((x,y))
+
+for x,y in staten_island_crimePoints:
+    staten_island_points.append((x,y))
+
+
+# maxx = float(1067226) # The max coords from the 
+# maxy = float(271820)  # whole file
+# minx = float(913357)
+# miny = float(121250)
+# deltax = float(maxx) - float(minx)
+# deltay = float(maxy) - float(miny)
+
+# for p in loc_data['points']:
+#     x,y = p['xy']
+#     x = float(x)
+#     y = float(y)
+#     xprime = (x - minx) / deltax         # val (0,1)
+#     yprime = 1.0 - ((y - miny) / deltay) # val (0,1)
+#     p['adjusted'] = (xprime,yprime) 
+
+maxx = float(1067226) # The max coords from the 
+maxy = float(271820)  # whole file
+minx = float(913357)
+miny = float(121250)
+deltax = float(maxx) - float(minx)
+deltay = float(maxy) - float(miny)
+
+for x,y in bronx_points:
+    x = float(x)
+    y = 1 - float(y)
+    newX = (x - minx)/deltax
+    newY = (y - miny)/deltay
+    newX = int(newX * 1000)
+    newY = int(newY * 1000)
+    bronx_adjustedPoints.append((newX ,newY))
+
+for x,y in brooklyn_points:
+    x = float(x)
+    y = 1 - float(y)
+    newX = (x - minx)/deltax
+    newY = (y - miny)/deltay
+    newX = int(newX * 1000)
+    newY = int(newY * 1000)
+    brooklyn_adjustedPoints.append((newX ,newY))
+
+for x,y in manhattan_points:
+    x = float(x)
+    y = 1 - float(y)
+    newX = (x - minx)/deltax
+    newY = (y - miny)/deltay
+    newX = int(newX * 1000)
+    newY = int(newY * 1000)
+    manhattan_adjustedPoints.append((newX ,newY))
+
+for x,y in queens_points:
+    x = float(x)
+    y = 1 - float(y)
+    newX = (x - minx)/deltax
+    newY = (y - miny)/deltay
+    newX = int(newX * 1000)
+    newY = int(newY * 1000)
+    queens_adjustedPoints.append((newX ,newY))
+
+for x,y in staten_island_points:
+    x = float(x)
+    y = 1 - float(y)
+    newX = (x - minx)/deltax
+    newY = (y - miny)/deltay
+    newX = int(newX * 1000)
+    newY = int(newY * 1000)
+    staten_island_adjustedPoints.append((newX ,newY))
+
 
 running = True
 while running:
 
-    for p in adjustedPoints:
+    for p in bronx_adjustedPoints:
+        pygame.draw.circle(screen, black, p, 3, 0)
+    for p in brooklyn_adjustedPoints:
+        pygame.draw.circle(screen, black, p, 3, 0)
+    for p in manhattan_adjustedPoints:
+        pygame.draw.circle(screen, black, p, 3, 0)
+    for p in queens_adjustedPoints:
+        pygame.draw.circle(screen, black, p, 3, 0)
+    for p in staten_island_adjustedPoints:
         pygame.draw.circle(screen, black, p, 3, 0)
     #for mbr in mbrs:
         #pygame.draw.polygon(screen, black, mbr, 2)
     for event in pygame.event.get():
+        #pygame.image.save(screen, DIRPATH+'/'+"NY_Screenshot.png")
         if event.type == pygame.QUIT:
             running = False
         #if event.type == pygame.MOUSEBUTTONDOWN:
