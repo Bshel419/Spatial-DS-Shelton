@@ -5,6 +5,7 @@ import os,sys
 DIRPATH = os.path.dirname(os.path.realpath(__file__))
 
 keys = []
+#original file data for all 5 burrows
 bronx_crimes = []
 brooklyn_crimes = []
 manhattan_crimes = []
@@ -12,12 +13,14 @@ manhattan_crimes = []
 queens_crimes = []
 staten_island_crimes = []
 
+#just the x,y coordinates for the 5 burrows
 bronx_crimePoints = []
 brooklyn_crimePoints = []
 manhattan_crimePoints = []
 queens_crimePoints = []
 staten_island_crimePoints = []
 
+#get all the data
 got_keys = False
 #with open(DIRPATH+'/../NYPD_CrimeData/Nypd_Crime_01') as f:
 with open(DIRPATH+'/'+'filtered_crimes_bronx.txt') as f:
@@ -79,7 +82,7 @@ with open(DIRPATH+'/'+'filtered_crimes_staten_island.txt') as f:
             
         staten_island_crimes.append(line)
 
-
+#now do some type casting and get the x,y coordinates stored into the crimePoints list
 for crime in bronx_crimes:
     if(len(crime) == 24):
         if crime[19] == '':

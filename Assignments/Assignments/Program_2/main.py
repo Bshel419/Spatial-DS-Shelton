@@ -58,8 +58,9 @@ def clean_area(screen,origin,width,height,color):
     points = [(ox,oy),(ox+width,oy),(ox+width,oy+height),(ox,oy+height),(ox,oy)]
     pygame.draw.polygon(screen, color, points, 0)
 
-
+#this was used for printing the screenshot
 DIRPATH = os.path.dirname(os.path.realpath(__file__))
+#variables that hold the RGB values for colors
 background_colour = (255,255,255)
 black = (0,0,0)
 firebrick = (194,35,38)
@@ -75,21 +76,24 @@ screen.fill(background_colour)
 
 pygame.display.flip()
 
-epsilon = 20
-min_pts = 5.0
+# epsilon = 20
+# min_pts = 5.0
 
+#original x,y points for the 5 burrows
 bronx_points = []
 brooklyn_points = []
 manhattan_points = []
 queens_points = []
 staten_island_points = []
 
+#adjusted points for the 5 burrows
 bronx_adjustedPoints = []
 brooklyn_adjustedPoints = []
 manhattan_adjustedPoints = []
 queens_adjustedPoints = []
 staten_island_adjustedPoints = []
 
+#grab the points from read_crime_data
 for x,y in bronx_crimePoints:
     bronx_points.append((x,y))
 
@@ -121,6 +125,7 @@ for x,y in staten_island_crimePoints:
 #     yprime = 1.0 - ((y - miny) / deltay) # val (0,1)
 #     p['adjusted'] = (xprime,yprime) 
 
+#maxs and mins for scaling formula
 maxx = float(1067226) # The max coords from the 
 maxy = float(271820)  # whole file
 minx = float(913357)
@@ -128,6 +133,7 @@ miny = float(121250)
 deltax = float(maxx) - float(minx)
 deltay = float(maxy) - float(miny)
 
+#re-scale the points
 for x,y in bronx_points:
     x = float(x)
     y = float(y)
@@ -173,7 +179,7 @@ for x,y in staten_island_points:
     newY = int(newY * 1000)
     staten_island_adjustedPoints.append((newX ,newY))
 
-
+#print all of the crime locations with each burrow as a different color
 running = True
 while running:
 
