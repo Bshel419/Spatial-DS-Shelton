@@ -1,3 +1,11 @@
+#Spatial Data Structures:::::Program 2
+#Mapping crime coordinates of NYC burrows
+#Benjamin Shelton
+#Date: 19 June 2017
+#This program opens up a NYC crime data text file (using another improted file) and plots
+#the x,y coordinates of those crimes on to the screen in different colors depending on which
+#NYC burrow the crime took place in
+
 import pygame
 import random
 from dbscan import *
