@@ -572,7 +572,7 @@
     "metadata": {
         "api": "1.5.8",
         "count": 14,
-        "generated": 1498083087000,
+        "generated": 1498111803000,
         "status": 200,
         "title": "USGS Earthquakes",
         "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2012-1-01&endtime=2012-12-01&minmagnitude=7"

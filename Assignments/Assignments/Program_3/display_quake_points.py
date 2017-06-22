@@ -12,24 +12,26 @@ def clean_area(screen,origin,width,height,color):
     pygame.draw.polygon(screen, color, points, 0)
 
 if __name__=='__main__':
-
+    DIRPATH = os.path.dirname(os.path.realpath(__file__))
     background_colour = (255,255,255)
     red = (255,0,0)
     (width, height) = (1024, 512)
 
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption('MBRs')
-    # Put this after pygame.init()
-    bg = pygame.image.load('WorldMap.png')
-
     screen.fill(background_colour)
+    # Put this after pygame.init()
+    bg = pygame.image.load(DIRPATH +'/WorldMap.png')
+
+
 
     pygame.display.flip()
-    f = open('quake-2017-adjusted.json','r')
+    f = open(DIRPATH + '/quake-1960To2017-adjusted.json','r')
     points = json.loads(f.read())
     
     running = True
     while running:
+        pygame.image.save(screen, DIRPATH+'/'+"NY_Screenshot.png")
         # Put this in your game loop:
         screen.blit(bg, (0, 0))
         for p in points:

@@ -146,7 +146,7 @@
                 "dmin": null,
                 "felt": null,
                 "gap": null,
-                "ids": ",iscgem805431,iscgem805429,iscgem805429,iscgem805430,iscgem805431,iscgemsup805431,atlas19690811212737,",
+                "ids": ",iscgem805430,iscgemsup805431,atlas19690811212737,",
                 "mag": 7.5,
                 "magType": "mw",
                 "mmi": 8.2,
@@ -155,7 +155,7 @@
                 "place": "Kuril Islands",
                 "rms": null,
                 "sig": 865,
-                "sources": ",is,is,iscgem,iscgem,iscgem,iscgemsup,atlas,",
+                "sources": ",iscgem,iscgemsup,atlas,",
                 "status": "automatic",
                 "time": -12277940000,
                 "title": "M 7.5 - Kuril Islands",
@@ -532,7 +532,7 @@
     "metadata": {
         "api": "1.5.8",
         "count": 13,
-        "generated": 1498083069000,
+        "generated": 1498111776000,
         "status": 200,
         "title": "USGS Earthquakes",
         "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=1969-1-01&endtime=1969-12-01&minmagnitude=7"

@@ -1,0 +1,121 @@
+[
+    {
+        "geometry": {
+            "coordinates": [
+                -177.209,
+                -28.84,
+                35
+            ],
+            "type": "Point"
+        },
+        "mag": 7.3,
+        "magType": "mw",
+        "place": "Kermadec Islands region",
+        "rms": null,
+        "sig": 820,
+        "time": -324985814000,
+        "types": ",origin,"
+    },
+    {
+        "geometry": {
+            "coordinates": [
+                -110.891,
+                44.63,
+                10
+            ],
+            "type": "Point"
+        },
+        "mag": 7.2,
+        "magType": "mw",
+        "place": "Yellowstone National Park, Wyoming",
+        "rms": null,
+        "sig": 798,
+        "time": -327345760000,
+        "types": ",origin,"
+    },
+    {
+        "geometry": {
+            "coordinates": [
+                156.328,
+                -7.776,
+                25
+            ],
+            "type": "Point"
+        },
+        "mag": 7,
+        "magType": "mw",
+        "place": "Solomon Islands",
+        "rms": null,
+        "sig": 754,
+        "time": -327380112000,
+        "types": ",origin,"
+    },
+    {
+        "geometry": {
+            "coordinates": [
+                121.105,
+                22.078,
+                25
+            ],
+            "type": "Point"
+        },
+        "mag": 7.2,
+        "magType": "mw",
+        "place": "Taiwan region",
+        "rms": null,
+        "sig": 798,
+        "time": -327596574000,
+        "types": ",origin,"
+    },
+    {
+        "geometry": {
+            "coordinates": [
+                -68.862,
+                -20.407,
+                109.2
+            ],
+            "type": "Point"
+        },
+        "mag": 7.1,
+        "magType": "mw",
+        "place": "Tarapaca, Chile",
+        "rms": null,
+        "sig": 776,
+        "time": -332984874000,
+        "types": ",origin,"
+    },
+    {
+        "geometry": {
+            "coordinates": [
+                159.732,
+                53.257,
+                55
+            ],
+            "type": "Point"
+        },
+        "mag": 7.9,
+        "magType": "mw",
+        "place": "near the east coast of the Kamchatka Peninsula, Russia",
+        "rms": null,
+        "sig": 960,
+        "time": -336501853000,
+        "types": ",origin,"
+    },
+    {
+        "geometry": {
+            "coordinates": [
+                142.33,
+                37.492,
+                35
+            ],
+            "type": "Point"
+        },
+        "mag": 7,
+        "magType": "mw",
+        "place": "off the east coast of Honshu, Japan",
+        "rms": null,
+        "sig": 754,
+        "time": -345322168000,
+        "types": ",origin,"
+    }
+]

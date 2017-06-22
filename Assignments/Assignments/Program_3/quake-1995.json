@@ -732,7 +732,7 @@
     "metadata": {
         "api": "1.5.8",
         "count": 18,
-        "generated": 1498083079000,
+        "generated": 1498111809000,
         "status": 200,
         "title": "USGS Earthquakes",
         "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=1995-1-01&endtime=1995-12-01&minmagnitude=7"

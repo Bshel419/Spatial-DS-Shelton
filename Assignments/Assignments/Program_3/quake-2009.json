@@ -626,7 +626,7 @@
                 "dmin": null,
                 "felt": 4,
                 "gap": 21.1,
-                "ids": ",usp000gs3t,us2009bjca,choy20090103223340,gcmtc200901032233a,gcmt20090103223340,atlas20090103223340,iscgem13989020,",
+                "ids": ",usp000gs3t,us2009bjca,choy20090103223340,gcmtc200901032233a,gcmt20090103223340,iscgem13989020,atlas20090103223340,",
                 "mag": 7.4,
                 "magType": "mwc",
                 "mmi": 7.4,
@@ -635,7 +635,7 @@
                 "place": "near the north coast of Papua, Indonesia",
                 "rms": 1.03,
                 "sig": 845,
-                "sources": ",us,us,choy,gcmt,gcmt,atlas,iscgem,",
+                "sources": ",us,us,choy,gcmt,gcmt,iscgem,atlas,",
                 "status": "reviewed",
                 "time": 1231022020290,
                 "title": "M 7.4 - near the north coast of Papua, Indonesia",
@@ -692,7 +692,7 @@
     "metadata": {
         "api": "1.5.8",
         "count": 17,
-        "generated": 1498083085000,
+        "generated": 1498111814000,
         "status": 200,
         "title": "USGS Earthquakes",
         "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2009-1-01&endtime=2009-12-01&minmagnitude=7"

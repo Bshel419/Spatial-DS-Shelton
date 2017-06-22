@@ -452,7 +452,7 @@
     "metadata": {
         "api": "1.5.8",
         "count": 11,
-        "generated": 1498083076000,
+        "generated": 1498111169000,
         "status": 200,
         "title": "USGS Earthquakes",
         "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=1988-1-01&endtime=1988-12-01&minmagnitude=7"

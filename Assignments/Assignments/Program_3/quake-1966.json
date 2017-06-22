@@ -252,7 +252,7 @@
     "metadata": {
         "api": "1.5.8",
         "count": 6,
-        "generated": 1498083067000,
+        "generated": 1498111774000,
         "status": 200,
         "title": "USGS Earthquakes",
         "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=1966-1-01&endtime=1966-12-01&minmagnitude=7"

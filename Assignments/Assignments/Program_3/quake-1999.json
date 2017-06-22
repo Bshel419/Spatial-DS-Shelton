@@ -652,7 +652,7 @@
     "metadata": {
         "api": "1.5.8",
         "count": 16,
-        "generated": 1498083081000,
+        "generated": 1498111811000,
         "status": 200,
         "title": "USGS Earthquakes",
         "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=1999-1-01&endtime=1999-12-01&minmagnitude=7"

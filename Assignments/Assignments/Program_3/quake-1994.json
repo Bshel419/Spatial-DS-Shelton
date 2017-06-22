@@ -306,7 +306,7 @@
                 "dmin": null,
                 "felt": null,
                 "gap": null,
-                "ids": ",usp0006djk,choy19940602181734,gcmtm060294c,gcmt19940602181736,duputel060294c,atlas19940602181738,iscgem167105,iscgemsup167106,",
+                "ids": ",usp0006djk,choy19940602181734,gcmtm060294c,gcmt19940602181736,duputel060294c,iscgem167106,atlas19940602181738,iscgem167105,iscgem167106,iscgemsup167106,",
                 "mag": 7.8,
                 "magType": "mw",
                 "mmi": 6,
@@ -315,7 +315,7 @@
                 "place": "south of Java, Indonesia",
                 "rms": 1.1,
                 "sig": 936,
-                "sources": ",us,choy,gcmt,gcmt,duputel,atlas,iscgem,iscgemsup,",
+                "sources": ",us,choy,gcmt,gcmt,duputel,is,atlas,iscgem,iscgem,iscgemsup,",
                 "status": "reviewed",
                 "time": 770581054020,
                 "title": "M 7.8 - south of Java, Indonesia",
@@ -492,7 +492,7 @@
     "metadata": {
         "api": "1.5.8",
         "count": 12,
-        "generated": 1498083079000,
+        "generated": 1498111809000,
         "status": 200,
         "title": "USGS Earthquakes",
         "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=1994-1-01&endtime=1994-12-01&minmagnitude=7"

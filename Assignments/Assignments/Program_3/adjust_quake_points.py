@@ -2,7 +2,6 @@ import math
 import json
 import sys
 import os
-
 def mercX(lon):
     """
     Mercator projection from longitude to X coord
@@ -48,7 +47,6 @@ def adjust_location_coords(extremes,points,width,height):
         x = float(x)
         y = float(y)
         xprime = (x - minx) / deltax         # val (0,1)
-        yprime = 1.0 - ((y - miny) / deltay) # val (0,1)
         yprime = ((y - miny) / deltay) # val (0,1)
         adjx = int(xprime*width)
         adjy = int(yprime*height)
@@ -56,25 +54,26 @@ def adjust_location_coords(extremes,points,width,height):
     return adjusted
 
 if __name__=='__main__':
-
     DIRPATH = os.path.dirname(os.path.realpath(__file__))
-    # Open our condensed json file to extract points
-    f = open(DIRPATH+'/'+"quake-2017.json",'r')
-    data = json.loads(f.read())
-    
+    data = []
+        
     allx = []
     ally = []
     points = []
-
-    # Loop through converting lat/lon to x/y and saving extreme values. 
-    for quake in data:
-        #st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
-        lon = quake['geometry']['coordinates'][0]
-        lat = quake['geometry']['coordinates'][1]
-        x,y = (mercX(lon),mercY(lat))
-        allx.append(x)
-        ally.append(y)
-        points.append((x,y))
+    for x in range(1960,2017):
+        year = 1960
+        f = open(DIRPATH + '\\quake-'+str(year)+'-condensed.json','r')
+        data = json.loads(f.read())
+        # Loop through converting lat/lon to x/y and saving extreme values. 
+        for quake in data:
+            #st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+            lon = quake['geometry']['coordinates'][0]
+            lat = quake['geometry']['coordinates'][1]
+            x,y = (mercX(lon),mercY(lat))
+            allx.append(x)
+            ally.append(y)
+            points.append((x,y))
+        year += 1
 
     # Create dictionary to send to adjust method
     extremes = {}
@@ -89,6 +88,6 @@ if __name__=='__main__':
     adj = adjust_location_coords(extremes,points,screen_width,screen_height)
 
     # Save adjusted points
-    f = open('quake-2017-adjusted.json','w')
+    f = open(DIRPATH + '/quake-1960To2017-adjusted.json','w')
     f.write(json.dumps(adj, sort_keys=True,indent=4, separators=(',', ': ')))
     f.close()

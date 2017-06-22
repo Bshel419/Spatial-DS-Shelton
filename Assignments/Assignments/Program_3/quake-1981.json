@@ -332,7 +332,7 @@
     "metadata": {
         "api": "1.5.8",
         "count": 8,
-        "generated": 1498083074000,
+        "generated": 1498111167000,
         "status": 200,
         "title": "USGS Earthquakes",
         "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=1981-1-01&endtime=1981-12-01&minmagnitude=7"

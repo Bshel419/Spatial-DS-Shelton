@@ -892,7 +892,7 @@
     "metadata": {
         "api": "1.5.8",
         "count": 22,
-        "generated": 1498083068000,
+        "generated": 1498111775000,
         "status": 200,
         "title": "USGS Earthquakes",
         "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=1968-1-01&endtime=1968-12-01&minmagnitude=7"

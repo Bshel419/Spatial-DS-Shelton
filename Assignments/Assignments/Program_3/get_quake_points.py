@@ -1,9 +1,8 @@
-import os
+import requests
 import json
 import sys
 import glob
-import requests
-
+import os
 """
 This class helps read the NYC crime data.
 Usage:
@@ -64,9 +63,11 @@ def get_earth_quake_data(year,month=[1,12],minmag=None,maxmag=None,query=True):
         return r
 
 DIRPATH = os.path.dirname(os.path.realpath(__file__))
-path = DIRPATH+'/'+"quake-1960To2017"
+path = DIRPATH + '/quake-1960To2017.json'
 years = [x for x in range(1960,2017)]
 months = [x for x in range(0,12)]
+
+
 
 for y in years:
     print("Year:%s" % (y))
@@ -78,3 +79,4 @@ for y in years:
     f = open('./quake-'+str(y)+'-condensed.json','w')
     f.write(json.dumps(rc, sort_keys=True,indent=4, separators=(',', ': ')))
     f.close()
+
