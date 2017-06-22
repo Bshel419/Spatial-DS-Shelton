@@ -31,7 +31,7 @@ if __name__=='__main__':
     
     running = True
     while running:
-        pygame.image.save(screen, DIRPATH+'/'+"NY_Screenshot.png")
+        pygame.image.save(screen, DIRPATH+'/'+"earthquake.png")
         # Put this in your game loop:
         screen.blit(bg, (0, 0))
         for p in points:

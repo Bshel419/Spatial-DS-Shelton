@@ -63,17 +63,19 @@ if __name__=='__main__':
     for x in range(1960,2017):
         year = 1960
         f = open(DIRPATH + '\\quake-'+str(year)+'-condensed.json','r')
-        data = json.loads(f.read())
+        stuff = json.loads(f.read())
+        for more_stuff in stuff:
+            data.append(more_stuff)
         # Loop through converting lat/lon to x/y and saving extreme values. 
-        for quake in data:
-            #st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
-            lon = quake['geometry']['coordinates'][0]
-            lat = quake['geometry']['coordinates'][1]
-            x,y = (mercX(lon),mercY(lat))
-            allx.append(x)
-            ally.append(y)
-            points.append((x,y))
-        year += 1
+    for quake in data:
+        #st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+        lon = quake['geometry']['coordinates'][0]
+        lat = quake['geometry']['coordinates'][1]
+        x,y = (mercX(lon),mercY(lat))
+        allx.append(x)
+        ally.append(y)
+        points.append((x,y))
+        
 
     # Create dictionary to send to adjust method
     extremes = {}
