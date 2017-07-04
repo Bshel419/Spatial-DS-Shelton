@@ -32,6 +32,36 @@ def merc_xy(lon,lat):
     y=0-r_major*math.log(ts)
     return (x,y)
 
+def find_extremes(result_list,width,height):
+    '''
+    find the extremes in a set of points.
+    input:
+        result_list: a list geojson entries
+    '''
+    extremes={}
+    allx = []
+    ally = []
+    points = []
+    for r in result_list:
+        lon = r['geometry']['coordinates'][0]
+        lat = r['geometry']['coordinates'][1]
+        x,y = (mercX(lon),mercY(lat))
+        allx.append(x)
+        ally.append(y)
+        points.append((x,y))
+    '''   
+    extremes['max_x'] = max(allx)
+    extremes['min_x'] = min(allx)
+    extremes['max_y'] = max(ally)
+    extremes['min_y'] = min(ally)
+    '''
+    extremes['max_x'] = width
+    extremes['min_x'] = 0
+    extremes['max_y'] = height
+    extremes['min_y'] = 0
+    
+    
+    return extremes,points
 
 def mercXY(lon,lat):
     r = 6378137
@@ -62,12 +92,12 @@ def adjust_location_coords(extremes,points,width,height):
         width: width of screen to plot to
         height: height of screen to plot to
     """
-    maxX = float(extremes['maxX']) # The max coords from bounding rectangles
-    minX = float(extremes['minX'])
-    maxY = float(extremes['maxY'])
-    minY = float(extremes['minY'])
-    deltax = float(maxX) - float(minX)
-    deltay = float(maxY) - float(minY)
+    maxx = float(extremes['max_x']) # The max coords from bounding rectangles
+    minx = float(extremes['min_x'])
+    maxy = float(extremes['max_y'])
+    miny = float(extremes['min_y'])
+    deltax = float(maxx) - float(minx)
+    deltay = float(maxy) - float(miny)
 
     adjusted = []
 
@@ -75,10 +105,10 @@ def adjust_location_coords(extremes,points,width,height):
         x,y = p
         x = float(x)
         y = float(y)
-        xprime = (x - minX) / deltax    # val (0,1)
-        yprime = ((y - minY) / deltay)  # val (0,1)
+        xprime = (x - minx) / deltax         # val (0,1)
+        yprime = ((y - miny) / deltay) # val (0,1)
         adjx = int(xprime*width)
-        adjy = int(yprime*height)
+        adjy = int(yprime*height)-256
         adjusted.append((adjx,adjy))
     return adjusted
 
@@ -94,3 +124,25 @@ def flatten_country_polygons(geometry):
                     newp.append([mercX(p[0]),mercY(p[1])])
                 adjusted_polys.append(newp)
         return adjusted_polys
+
+def mercToLL(point):
+    lng,lat = point
+    lng = lng / 256.0 * 360.0 - 180.0
+    n = math.pi - 2.0 * math.pi * lat / 256.0
+    lat = (180.0 / math.pi * math.atan(0.5 * (math.exp(n) - math.exp(-n))))
+    return (lng, lat)
+
+def x_to_lon(x,width):
+    #http://board.flashkit.com/board/showthread.php?666832-Turn-latitude-longitude-into-X-Y-coordinates
+    '''DEGREES_PER_RADIAN = 57.2958
+    RADIANS_PER_DEGREE = 0.0174533
+    sign = math.sin(x)
+    sin = math.sin(x * RADIANS_PER_DEGREE * sign)
+    #return (sign * (math.log((1.0 + sin) / (1.0 - sin)) / 2.0)) *180
+    return (math.atan(math.sinh(float(x))) * DEGREES_PER_RADIAN);'''
+    return ((float(x)/(width/360.0))-180.0)
+
+
+def y_to_lat(y,height):
+    #https://stackoverflow.com/questions/1166059/how-can-i-get-latitude-longitude-from-x-y-on-a-mercator-map-jpeg
+    return ((((height/2.0)-y)/(height/2.0))*90)

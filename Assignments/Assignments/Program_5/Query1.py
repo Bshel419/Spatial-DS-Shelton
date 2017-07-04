@@ -187,33 +187,112 @@ def run_tests():
 if __name__=='__main__':
     mh = MongoHelper()
     DIRPATH = os.path.dirname(os.path.realpath(__file__))
-
     background_colour = (255,255,255)
     red = (255, 0, 0)
-    (width, height) = (2048, 1024)
+    green = (0,255,0)
+    (width, height) = (1024, 512)
+    color_list = {'airports': (0,0,255),'volcanos':(255,0,0),'earthquakes':(255,255,0),'meteorites':(165,42,42),}
 
     screen = pygame.display.set_mode((width, height))
 
     screen.fill(background_colour)
 
-    bg = pygame.image.load(DIRPATH +'/draw_world_map/images/2048x1024.png')
+    bg = pygame.image.load(DIRPATH +'/draw_world_map/images/1024x512.png')
     azurePin = pygame.image.load(DIRPATH +'/draw_world_map/images/icons/map_pins/PNG/Centered/16x16/MapMarker_Ball__Azure.png')
     pinkPin = pygame.image.load(DIRPATH +'/draw_world_map/images/icons/map_pins/PNG/Centered/16x16/MapMarker_Ball__Pink.png')
     
-    x = int((width/360.0) * (180 + 33.9137))
-    y = int((height/180.0) * (90 - 98.4934))
+    points = []
+    extremes = {}
+
+    ap_list = []
+    apPath_list = []
+    final = []
+    feature_list = ['volcanos', 'earthquakes', 'meteorites']
+    adj = {'volcanoes':None, 'earthquakes': None, 'meteorites': None}
+    searchRad = 500
+    shortestDistance = 999999
+
     running = True
-    startPoint = (x, y)
+    firstClick = False
+    secondClick = False
+    finished = False
+
+    converted = False
+    
+    if len(sys.argv) > 1:
+        firstClick = True
+        secondClick = True
+        startPoint = sys.argv[1]
+        endPoint = sys.argv[2]
+        searchRad = float(sys.argv[3])
+        
+
+        start =  mh.get_doc_by_keyword('airports','properties.ap_iata',startPoint)
+        startPoint = (start[0]['geometry']['coordinates'][1],start[0]['geometry']['coordinates'][0])
+        pt_list.append(start_coords)
+
+        end =  mh.get_doc_by_keyword('airports','properties.ap_iata',endPoint)
+        endPoint = (end[0]['geometry']['coordinates'][1],end[0]['geometry']['coordinates'][0])
+        
+    
 
     screen.blit(bg, (0, 0))
-    screen.blit(azurePin, startPoint)
     pygame.display.flip()
 
     while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                screen.blit(azurePin, event.pos)
-                pygame.display.flip()
+        pygame.event.pump()
+        event = pygame.event.wait()
+        mouse = pygame.mouse.get_pressed()
+
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.MOUSEBUTTONDOWN and mouse[0] == True and firstClick == False:
+            startPoint = mapH.mercToLL(event.pos)
+            screen.blit(azurePin, event.pos)
+            pygame.display.flip()
+            firstClick = True
+        if event.type == pygame.MOUSEBUTTONDOWN and mouse[2] == True and secondClick == False:
+            endPoint = mapH.mercToLL(event.pos)
+            screen.blit(pinkPin, event.pos)
+            pygame.display.flip()
+            secondClick = True
+        if firstClick == True and secondClick == True and finished == False:
+            while finished == False:
+                ap_list = mh.get_features_near_me('airports', (startPoint[0], startPoint[1]), int(searchRad))
+                for ap in ap_list:
+                    x = ap['geometry']['coordinates'][0]
+                    y = ap['geometry']['coordinates'][1]
+                    distance = mh._haversine(x,y,endPoint[0],endPoint[1])
+                    if distance < shortestDistance:
+                        closest = (x,y)
+                        shortestDistance = distance
+                apPath_list.append(closest)
+                startPoint = closest
+                if mh._haversine(startPoint[0], startPoint[1], endPoint[0], endPoint[1]) < searchRad:
+                    finished = True
+        
+        if converted == False and finished == True:
+            apPath_list.append(endPoint)
+            for ap in apPath_list:
+                x = mapH.mercX(ap[1])
+                y = mapH.mercY(ap[0])
+                final.append((x,y))
+            airports = mapH.adjust_location_coords(extremes,final,width,height)
+            converted = True
+
+        if converted == True and finished == True:
+            for ap in apPath_list:
+                for f in feature_list:
+                    result_list = mh.get_features_near_me(f,(ap[1], ap[0]), searchRad)
+                    extremes,points = mapH.find_extremes(result_list, width, height)
+                    adj[f] = (mapH.adjust_location_coords(extremes,points,width,height))
+                    for pt in adj[f]:
+                        pygame.draw.circle(screen, color_list[f], pt, 2, 1)
+                        pygame.dispay.flip()
+            pygame.draw.lines(screen, green, False, airports)
+            
+        
+                 
+
+
     
