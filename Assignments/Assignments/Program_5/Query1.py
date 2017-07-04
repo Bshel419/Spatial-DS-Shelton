@@ -24,7 +24,7 @@ class MongoHelper(object):
         x,y = point
 
         res = self.client['world_data'][collection].find( { 'geometry': { '$geoWithin': { '$centerSphere': [ [x, y ] , radius/earth_radius ] } }} )
-        
+
         return self._make_result_list(res)
 
     def get_doc_by_keyword(self,collection,field_name,search_key,like=True):
@@ -134,6 +134,34 @@ class MongoHelper(object):
         r = 3956 # Radius of earth in kilometers. Use 6371 for km
         return c * r
 
+def haversine(point1, point2, miles=True):
+    """ Calculate the great-circle distance between two points on the Earth surface.
+    :input: two 2-tuples, containing the latitude and longitude of each point
+    in decimal degrees.
+    Example: haversine((45.7597, 4.8422), (48.8567, 2.3508))
+    :output: Returns the distance bewteen the two points.
+    The default unit is kilometers. Miles can be returned
+    if the ``miles`` parameter is set to True.
+    """
+
+    # unpack latitude/longitude
+    lat1, lng1 = point1
+    lat2, lng2 = point2
+
+    # convert all latitudes/longitudes from decimal degrees to radians
+    lat1, lng1, lat2, lng2 = map(math.radians, (lat1, lng1, lat2, lng2))
+
+    # calculate haversine
+    lat = lat2 - lat1
+    lng = lng2 - lng1
+    d = math.sin(lat * 0.5) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(lng * 0.5) ** 2
+    # h = 2 * RADIUS_KM * math.asin(math.sqrt(d))
+    h = 2 * math.asin(math.sqrt(d))
+    
+    if miles:
+        return h * 0.621371  # in miles
+    else:
+        return h  # in kilometers
 
 def run_tests():
     """
@@ -197,7 +225,7 @@ if __name__=='__main__':
 
     screen.fill(background_colour)
 
-    bg = pygame.image.load(DIRPATH +'/draw_world_map/images/1024x512.png')
+    bg = pygame.image.load(DIRPATH +'/draw_world_map/images/1024x512.png') 
     azurePin = pygame.image.load(DIRPATH +'/draw_world_map/images/icons/map_pins/PNG/Centered/16x16/MapMarker_Ball__Azure.png')
     pinkPin = pygame.image.load(DIRPATH +'/draw_world_map/images/icons/map_pins/PNG/Centered/16x16/MapMarker_Ball__Pink.png')
     
@@ -208,7 +236,7 @@ if __name__=='__main__':
     apPath_list = []
     final = []
     feature_list = ['volcanos', 'earthquakes', 'meteorites']
-    adj = {'volcanoes':None, 'earthquakes': None, 'meteorites': None}
+    adj = {'volcanoes': None, 'earthquakes': None, 'meteorites': None}
     searchRad = 500
     shortestDistance = 999999
     closest = None
@@ -237,7 +265,6 @@ if __name__=='__main__':
         endPoint = (end[0]['geometry']['coordinates'][1],end[0]['geometry']['coordinates'][0])
         
     
-
     screen.blit(bg, (0, 0))
     pygame.display.flip()
 
@@ -249,38 +276,37 @@ if __name__=='__main__':
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN and mouse[0] == True and firstClick == False:
-            startPoint = mapH.mercToLL(event.pos)
+            startPoint = (mapH.y_to_lat(event.pos[1],height),mapH.x_to_lon(event.pos[0],width))
             screen.blit(azurePin, event.pos)
             pygame.display.flip()
             firstClick = True
         if event.type == pygame.MOUSEBUTTONDOWN and mouse[2] == True and secondClick == False:
-            endPoint = mapH.mercToLL(event.pos)
+            endPoint = (mapH.y_to_lat(event.pos[1],height), mapH.x_to_lon(event.pos[0],width))
             screen.blit(pinkPin, event.pos)
             pygame.display.flip()
             secondClick = True
+            
         if firstClick == True and secondClick == True and finished == False:
             while finished == False:
-                ap_list = mh.get_features_near_me('airports', (startPoint[0], startPoint[1]), int(searchRad))
-                if debug == 1:
-                    print(ap_list)
-                    debug = 2
+                ap_list = mh.get_features_near_me('airports', (startPoint[1], startPoint[0]), int(searchRad))
+
                 for ap in ap_list:
                     x = ap['geometry']['coordinates'][0]
                     y = ap['geometry']['coordinates'][1]
-                    distance = mh._haversine(x,y,endPoint[0],endPoint[1])
+                    distance = haversine((x,y),endPoint)
                     if distance < shortestDistance:
                         closest = (x,y)
                         shortestDistance = distance
                 apPath_list.append(closest)
                 startPoint = closest
-                if mh._haversine(startPoint[0], startPoint[1], endPoint[0], endPoint[1]) < searchRad:
+                if haversine(startPoint, endPoint) < searchRad:
                     finished = True
         
         if converted == False and finished == True:
             apPath_list.append(endPoint)
             for ap in apPath_list:
-                x = mapH.mercX(ap[1])
-                y = mapH.mercY(ap[0])
+                x = mapH.mercX(ap[0])
+                y = mapH.mercY(ap[1])
                 final.append((x,y))
             airports = mapH.adjust_location_coords(extremes,final,width,height)
             converted = True
