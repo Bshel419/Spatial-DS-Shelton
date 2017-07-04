@@ -191,7 +191,7 @@ if __name__=='__main__':
     red = (255, 0, 0)
     green = (0,255,0)
     (width, height) = (1024, 512)
-    color_list = {'airports': (0,0,255),'volcanos':(255,0,0),'earthquakes':(255,255,0),'meteorites':(165,42,42),}
+    color_list = {'airports': (0,0,255),'volcanos':(255,0,0),'earthquakes':(255,255,0),'meteorites':(165,42,42)}
 
     screen = pygame.display.set_mode((width, height))
 
@@ -211,6 +211,8 @@ if __name__=='__main__':
     adj = {'volcanoes':None, 'earthquakes': None, 'meteorites': None}
     searchRad = 500
     shortestDistance = 999999
+    closest = None
+    debug = 1
 
     running = True
     firstClick = False
@@ -259,6 +261,9 @@ if __name__=='__main__':
         if firstClick == True and secondClick == True and finished == False:
             while finished == False:
                 ap_list = mh.get_features_near_me('airports', (startPoint[0], startPoint[1]), int(searchRad))
+                if debug == 1:
+                    print(ap_list)
+                    debug = 2
                 for ap in ap_list:
                     x = ap['geometry']['coordinates'][0]
                     y = ap['geometry']['coordinates'][1]
